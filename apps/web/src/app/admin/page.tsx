@@ -1,6 +1,7 @@
 export default function AdminHome() {
   const links = [
     { href: "/admin/review", label: "Review queue" },
+    { href: "/admin/match", label: "Match picks to events" },
     { href: "/admin/cappers", label: "Cappers" },
     { href: "/admin/sources", label: "Sources" },
     { href: "/admin/ingest", label: "Manual ingest" },

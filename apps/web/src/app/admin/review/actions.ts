@@ -36,6 +36,11 @@ export async function createPickFromRawMessage(formData: FormData) {
 
   if (!rawMessageId) throw new Error("Missing raw message");
   if (!eventDesc || !side) throw new Error("Event and side are required");
+  if (intent === "accept" && market === "moneyline" && !oddsRaw) {
+    // §2.4: a moneyline pick with no stated odds can't have its payout computed —
+    // it's ungradeable, not accepted, no exceptions.
+    throw new Error("Moneyline picks require odds — mark ungradeable instead if none were posted");
+  }
 
   const raw = await loadRawMessage(rawMessageId);
 

@@ -9,7 +9,8 @@
     "dev:web": "npm run dev --workspace=apps/web",
     "dev:worker": "npm run dev --workspace=apps/worker",
     "db:generate": "npm run generate --workspace=packages/db",
-    "db:migrate": "npm run migrate --workspace=packages/db"
+    "db:migrate": "npm run migrate --workspace=packages/db",
+    "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
     "railway": "^3.5.5"
