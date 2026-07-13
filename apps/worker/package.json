@@ -1,0 +1,18 @@
+{
+  "name": "@graded/worker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx --env-file=.env.local watch src/index.ts",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@graded/db": "*",
+    "pino": "^9.5.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.2"
+  }
+}
