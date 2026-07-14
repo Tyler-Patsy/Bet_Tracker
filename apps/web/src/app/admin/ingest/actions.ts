@@ -17,7 +17,9 @@ export async function createManualIngest(formData: FormData) {
 
   if (!capperId) throw new Error("Capper is required");
   if (!postedAtRaw) throw new Error("Posted-at is required");
-  if (!pickText) throw new Error("Pick text is required");
+  if (!pickText && (!screenshot || screenshot.size === 0)) {
+    throw new Error("Provide pick text, a screenshot, or both");
+  }
 
   const postedAt = new Date(postedAtRaw);
   if (Number.isNaN(postedAt.getTime())) throw new Error("Invalid posted-at timestamp");
@@ -46,7 +48,7 @@ export async function createManualIngest(formData: FormData) {
       sourceId: source.id,
       externalId: randomUUID(),
       postedAt,
-      text: pickText,
+      text: pickText || null,
       media,
     })
     .returning({ id: rawMessages.id });

@@ -16,8 +16,8 @@ export default async function IngestPage() {
       </a>
       <h1 className="mt-2 text-xl font-semibold">Manual ingest (X/Twitter paste)</h1>
       <p className="mt-1 max-w-lg text-sm text-neutral-400">
-        Paste a pick you read on X. Posted-at is the tweet&apos;s own timestamp, not now —
-        this is what integrity checks grade against.
+        Paste a pick you read anywhere (X, Instagram, Reddit, a screenshot). Posted-at is the
+        post&apos;s own timestamp, not now — this is what integrity checks grade against.
       </p>
 
       <form
@@ -53,13 +53,12 @@ export default async function IngestPage() {
         />
         <textarea
           name="pick_text"
-          placeholder="Pick text, exactly as posted"
-          required
+          placeholder="Pick text, exactly as posted (optional if you attach a screenshot below)"
           rows={4}
           className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-500"
         />
         <label className="text-xs text-neutral-400">
-          Screenshot (optional)
+          Screenshot — bet slip, Instagram post, anything image-based (required if no text above)
           <input
             type="file"
             name="screenshot"

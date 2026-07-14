@@ -20,7 +20,10 @@ function buildUserContent(input: ParseInput): UserContentBlock[] {
   const tendencyLine = input.capperSportTendencies?.length
     ? `This capper's recent picks were in: ${input.capperSportTendencies.join(", ")}.\n`
     : "";
-  blocks.push({ type: "text", text: `${tendencyLine}${input.text}` });
+  // Claude's API rejects an empty text content block, and image-only posts
+  // (screenshot with no caption) legitimately have no text to append.
+  const body = input.text.trim() || "(no caption text — read the pick from the attached image)";
+  blocks.push({ type: "text", text: `${tendencyLine}${body}` });
   return blocks;
 }
 
