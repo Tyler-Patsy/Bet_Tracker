@@ -84,3 +84,53 @@ export async function markNoPicks(rawMessageId: number) {
   await logAudit("mark_no_picks", "raw_message", rawMessageId, {});
   revalidatePath("/admin/review");
 }
+
+// Decides a parser-created pending_review pick: Accept (with any edits the
+// admin made) / Reject (parser got it wrong) / Mark ungradeable.
+export async function decidePick(formData: FormData) {
+  const pickId = Number(formData.get("pick_id"));
+  const intent = String(formData.get("intent") ?? "accept"); // accept | reject | ungradeable
+  const sport = String(formData.get("sport") ?? "");
+  const league = String(formData.get("league") ?? "").trim() || null;
+  const eventDesc = String(formData.get("event_desc") ?? "").trim();
+  const market = String(formData.get("market") ?? "");
+  const side = String(formData.get("side") ?? "").trim();
+  const lineRaw = String(formData.get("line") ?? "").trim();
+  const oddsRaw = String(formData.get("odds_american") ?? "").trim();
+  const unitsRaw = String(formData.get("units") ?? "1").trim();
+  const stakeConvention = String(formData.get("stake_convention") ?? "risk");
+  const mlVariant = String(formData.get("ml_variant") ?? "").trim() || null;
+  const eventIdRaw = String(formData.get("event_id") ?? "").trim();
+
+  if (!pickId) throw new Error("Missing pick");
+  if (intent === "accept") {
+    if (!eventDesc || !side) throw new Error("Event and side are required");
+    if (market === "moneyline" && !oddsRaw) {
+      throw new Error("Moneyline picks require odds — mark ungradeable instead if none were posted");
+    }
+    if (!eventIdRaw) throw new Error("Link an event before accepting");
+  }
+
+  const status = intent === "reject" ? "rejected" : intent === "ungradeable" ? "ungradeable" : "accepted";
+
+  await db
+    .update(picks)
+    .set({
+      sport,
+      league,
+      eventDesc,
+      market,
+      side,
+      line: lineRaw || null,
+      oddsAmerican: oddsRaw ? Number(oddsRaw) : null,
+      units: unitsRaw || "1",
+      stakeConvention,
+      mlVariant,
+      eventId: eventIdRaw ? Number(eventIdRaw) : null,
+      status,
+    })
+    .where(eq(picks.id, pickId));
+
+  await logAudit(`review_${intent}`, "pick", pickId, {});
+  revalidatePath("/admin/review");
+}

@@ -1,10 +1,12 @@
 import pino from "pino";
 import PgBoss from "pg-boss";
+import Anthropic from "@anthropic-ai/sdk";
 import { sql } from "drizzle-orm";
 import { db, workerHeartbeat } from "@graded/db";
 import { syncEvents, todayAndTomorrow } from "./jobs/sync-events";
 import { liveSync } from "./jobs/live-sync";
 import { gradeEvent } from "./jobs/grade-event";
+import { sweepPendingMessages } from "./jobs/parse-message";
 
 const log = pino({ name: "worker" });
 
@@ -29,9 +31,11 @@ async function startJobs() {
   await boss.createQueue("daily-schedule");
   await boss.createQueue("live-sync");
   await boss.createQueue("grade-event");
+  await boss.createQueue("parse-sweep");
 
   await boss.schedule("daily-schedule", "0 6 * * *", {}, { tz: "America/New_York" });
   await boss.schedule("live-sync", "*/10 * * * *");
+  await boss.schedule("parse-sweep", "* * * * *");
 
   await boss.work("daily-schedule", async () => {
     await syncEvents(todayAndTomorrow(), log);
@@ -47,7 +51,18 @@ async function startJobs() {
     }
   });
 
-  log.info("pg-boss jobs registered: daily-schedule, live-sync, grade-event");
+  const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+  if (anthropicApiKey) {
+    const anthropic = new Anthropic({ apiKey: anthropicApiKey });
+    await boss.work("parse-sweep", async () => {
+      const count = await sweepPendingMessages(anthropic, log);
+      if (count > 0) log.info({ count }, "parse-sweep processed messages");
+    });
+  } else {
+    log.warn("ANTHROPIC_API_KEY not set — parse-sweep will not run, raw messages stay pending");
+  }
+
+  log.info("pg-boss jobs registered: daily-schedule, live-sync, grade-event, parse-sweep");
   return boss;
 }
 

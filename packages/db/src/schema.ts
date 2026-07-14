@@ -187,6 +187,31 @@ export const adminAudit = pgTable("admin_audit", {
   at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+// Seed table for §10.3 fuzzy event matching: maps how a capper might write a
+// team name ("Lakers", "LA", "LAL") to the canonical name stored on events.
+export const teamAliases = pgTable(
+  "team_aliases",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    league: text("league").notNull(),
+    canonicalName: text("canonical_name").notNull(),
+    alias: text("alias").notNull(),
+  },
+  (t) => [unique().on(t.league, t.alias)]
+);
+
+// Tracks Anthropic token spend per parse call so the worker can enforce the
+// §16 cost guardrail (pause the parse queue if projected monthly spend > $25).
+export const llmUsage = pgTable("llm_usage", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  model: text("model").notNull(),
+  inputTokens: integer("input_tokens").notNull(),
+  outputTokens: integer("output_tokens").notNull(),
+  costUsd: numeric("cost_usd").notNull(),
+  rawMessageId: bigint("raw_message_id", { mode: "number" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 // Single-row table the worker touches every 60s so /api/health can detect a stalled listener (§16).
 export const workerHeartbeat = pgTable("worker_heartbeat", {
   id: integer("id").primaryKey().default(1),

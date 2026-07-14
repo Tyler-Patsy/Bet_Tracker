@@ -7,9 +7,11 @@
     "start": "tsx src/index.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
     "@graded/db": "*",
     "@graded/espn": "*",
     "@graded/grading": "*",
+    "@graded/parser": "*",
     "drizzle-orm": "^0.36.4",
     "pg-boss": "^10.1.5",
     "pino": "^9.5.0"
