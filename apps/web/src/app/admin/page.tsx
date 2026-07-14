@@ -10,6 +10,7 @@ export default async function AdminHome() {
     { href: "/admin/cappers", label: "Cappers" },
     { href: "/admin/sources", label: "Sources" },
     { href: "/admin/ingest", label: "Manual ingest" },
+    { href: "/admin/submissions", label: "Capper submissions" },
   ];
 
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);

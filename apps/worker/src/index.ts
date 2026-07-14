@@ -7,6 +7,7 @@ import { syncEvents, todayAndTomorrow } from "./jobs/sync-events";
 import { liveSync } from "./jobs/live-sync";
 import { gradeEvent } from "./jobs/grade-event";
 import { sweepPendingMessages } from "./jobs/parse-message";
+import { rollupAllCappers } from "./jobs/rollup";
 
 const log = pino({ name: "worker" });
 
@@ -32,10 +33,12 @@ async function startJobs() {
   await boss.createQueue("live-sync");
   await boss.createQueue("grade-event");
   await boss.createQueue("parse-sweep");
+  await boss.createQueue("rollup");
 
   await boss.schedule("daily-schedule", "0 6 * * *", {}, { tz: "America/New_York" });
   await boss.schedule("live-sync", "*/10 * * * *");
   await boss.schedule("parse-sweep", "* * * * *");
+  await boss.schedule("rollup", "*/15 * * * *");
 
   await boss.work("daily-schedule", async () => {
     await syncEvents(todayAndTomorrow(), log);
@@ -43,6 +46,10 @@ async function startJobs() {
 
   await boss.work("live-sync", async () => {
     await liveSync(boss, log);
+  });
+
+  await boss.work("rollup", async () => {
+    await rollupAllCappers(log);
   });
 
   await boss.work<{ eventId: number }>("grade-event", async (jobs) => {
@@ -62,7 +69,7 @@ async function startJobs() {
     log.warn("ANTHROPIC_API_KEY not set — parse-sweep will not run, raw messages stay pending");
   }
 
-  log.info("pg-boss jobs registered: daily-schedule, live-sync, grade-event, parse-sweep");
+  log.info("pg-boss jobs registered: daily-schedule, live-sync, grade-event, parse-sweep, rollup");
   return boss;
 }
 
