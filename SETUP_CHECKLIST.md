@@ -52,9 +52,22 @@ Railway-provided one, he'll need registrar access to add a CNAME.
 **B4. Uptime monitor** — a free account at something like UptimeRobot or Better
 Uptime, pointed at `/api/health` once M0 is deployed. Not urgent — can wait until M5.
 
-**B5. Reddit API app (M6 only)** — script-type OAuth app at
-https://www.reddit.com/prefs/apps. Not needed until Milestone 6, which starts a week
-after M5 is stable. Don't set this up early.
+**B5. Reddit API app** — needed now, moved up ahead of schedule at Tyler's request
+(2026-07-14) to get automated handle-tracking working sooner than the original M6 plan.
+- Go to https://www.reddit.com/prefs/apps (log in with your own Reddit account).
+- Click "create another app..." near the bottom.
+  - name: anything, e.g. "Graded Tracker"
+  - type: select **script** (not "web app" or "installed app")
+  - description: can leave blank
+  - about url: required by the form but not actually checked — any valid URL works,
+    e.g. `https://github.com/Tyler-Patsy/Bet_Tracker`
+  - redirect uri: `http://localhost:8080` (required field, but unused for script apps)
+- Click "create app".
+- Copy two values from the box that appears:
+  - the string under "personal use script" (right under the app name) — this is the
+    **client ID**
+  - the "secret" field — this is the **client secret**
+- Send both here. These become `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET`.
 
 ## Explicitly NOT needed for v1
 

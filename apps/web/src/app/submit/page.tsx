@@ -8,11 +8,8 @@ export const metadata: Metadata = {
 
 export default function SubmitPage() {
   return (
-    <main className="mx-auto max-w-lg p-4 sm:p-8">
-      <a href="/" className="text-sm text-neutral-400 hover:text-neutral-200">
-        ← Graded
-      </a>
-      <h1 className="mt-2 text-2xl font-semibold">Suggest a capper</h1>
+    <main className="mx-auto max-w-lg px-4 py-10 sm:px-8">
+      <h1 className="font-display text-4xl font-bold uppercase tracking-tight">Suggest a capper</h1>
       <p className="mt-2 text-sm text-neutral-400">
         Know a capper posting free picks on a public Telegram channel, Reddit, or X
         who should be tracked? Tell us who and where.

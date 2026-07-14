@@ -7,11 +7,8 @@ export const metadata: Metadata = {
 
 export default function MethodologyPage() {
   return (
-    <main className="mx-auto max-w-2xl p-4 sm:p-8">
-      <a href="/" className="text-sm text-neutral-400 hover:text-neutral-200">
-        ← Graded
-      </a>
-      <h1 className="mt-2 text-2xl font-semibold">Methodology</h1>
+    <main className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
+      <h1 className="font-display text-4xl font-bold uppercase tracking-tight">Methodology</h1>
       <p className="mt-2 text-neutral-400">
         This page is the whole rulebook. If a number on this site doesn&apos;t match
         what you&apos;d compute yourself from a capper&apos;s public post, that&apos;s a bug —
@@ -19,7 +16,7 @@ export default function MethodologyPage() {
       </p>
 
       <section className="mt-8 space-y-4 text-sm leading-relaxed text-neutral-200">
-        <h2 className="text-lg font-semibold text-neutral-100">The rules</h2>
+        <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-neutral-100">The rules</h2>
 
         <p>
           <strong>Nothing is deleted.</strong> The moment we see a post, we save the
@@ -70,7 +67,7 @@ export default function MethodologyPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-neutral-100">How a pick gets graded</h2>
+        <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-neutral-100">How a pick gets graded</h2>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
@@ -118,7 +115,56 @@ export default function MethodologyPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-neutral-100">Something looks wrong?</h2>
+        <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-neutral-100">How letter grades work</h2>
+        <p className="mt-2 text-sm leading-relaxed text-neutral-300">
+          A capper&apos;s grade is computed from ROI (units won or lost per unit risked)
+          and nothing else — not volume, not streaks, not follower counts. No grade is
+          shown until a capper has 20 graded picks; a hot 4-0 week isn&apos;t a record.
+        </p>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full text-left text-sm [font-variant-numeric:tabular-nums]">
+            <thead>
+              <tr className="border-b border-neutral-800 text-neutral-400">
+                <th className="py-2 pr-4">Grade</th>
+                <th>ROI</th>
+              </tr>
+            </thead>
+            <tbody className="text-neutral-300">
+              <tr className="border-b border-neutral-900">
+                <td className="py-2 pr-4 text-green-400">A+</td>
+                <td>+15% or better</td>
+              </tr>
+              <tr className="border-b border-neutral-900">
+                <td className="py-2 pr-4 text-green-400">A</td>
+                <td>+8% to +15%</td>
+              </tr>
+              <tr className="border-b border-neutral-900">
+                <td className="py-2 pr-4">B</td>
+                <td>+3% to +8%</td>
+              </tr>
+              <tr className="border-b border-neutral-900">
+                <td className="py-2 pr-4 text-neutral-400">C</td>
+                <td>−3% to +3% (roughly break-even)</td>
+              </tr>
+              <tr className="border-b border-neutral-900">
+                <td className="py-2 pr-4 text-red-400">D</td>
+                <td>−10% to −3%</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 text-red-400">F</td>
+                <td>worse than −10%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-sm text-neutral-500">
+          For context: blindly betting −110 sides at a coin-flip rate runs about −4.5%
+          ROI. Sustained +8% is genuinely hard, which is why A grades should be rare.
+        </p>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-neutral-100">Something looks wrong?</h2>
         <p className="mt-2 text-sm text-neutral-300">
           Every stat here should be reproducible from a capper&apos;s own public post. If
           you think a pick was graded incorrectly, or a capper&apos;s record looks off,

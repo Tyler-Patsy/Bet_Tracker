@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { db, cappers, picks, capperStats, rawMessages } from "@graded/db";
 import { and, asc, desc, eq, inArray, isNotNull } from "drizzle-orm";
 import { formatPct, formatStreak, formatUnits, unitsColorClass } from "@/lib/format";
+import { gradeFor } from "@/lib/grade";
 import UnitsChart from "@/components/UnitsChart";
 import FlagBadges from "@/components/FlagBadges";
+import GradeBadge from "@/components/GradeBadge";
 import PendingPicks from "@/components/PendingPicks";
 
 export const dynamic = "force-dynamic";
@@ -79,34 +81,42 @@ export default async function CapperProfilePage({
       : [];
 
   return (
-    <main className="mx-auto max-w-3xl p-4 sm:p-8">
-      <a href="/" className="text-sm text-neutral-400 hover:text-neutral-200">
-        ← Graded
+    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-8">
+      <a href="/leaderboard" className="text-sm text-neutral-400 hover:text-neutral-200">
+        ← Leaderboard
       </a>
-      <h1 className="mt-2 text-2xl font-semibold">{capper.displayName}</h1>
-      {capper.bio && <p className="mt-1 text-sm text-neutral-400">{capper.bio}</p>}
+      <div className="mt-3 flex items-center gap-4">
+        <GradeBadge
+          grade={stats30d ? gradeFor(stats30d.roi, stats30d.gradedPicks) : null}
+          size="lg"
+        />
+        <h1 className="font-display text-4xl font-bold uppercase tracking-tight">
+          {capper.displayName}
+        </h1>
+      </div>
+      {capper.bio && <p className="mt-2 text-sm text-neutral-400">{capper.bio}</p>}
 
       {stats30d && (
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded border border-neutral-800 bg-neutral-900 p-3">
-            <div className="text-xs text-neutral-500">Record (30d)</div>
-            <div className="mt-1 [font-variant-numeric:tabular-nums]">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-sm border border-neutral-800 bg-neutral-900 p-3">
+            <div className="text-xs uppercase tracking-wide text-neutral-500">Record (30d)</div>
+            <div className="font-display mt-1 text-2xl font-semibold [font-variant-numeric:tabular-nums]">
               {stats30d.wins}-{stats30d.losses}-{stats30d.pushes}
             </div>
           </div>
-          <div className="rounded border border-neutral-800 bg-neutral-900 p-3">
-            <div className="text-xs text-neutral-500">Units (30d)</div>
-            <div className={`mt-1 font-medium [font-variant-numeric:tabular-nums] ${unitsColorClass(stats30d.unitsNet)}`}>
+          <div className="rounded-sm border border-neutral-800 bg-neutral-900 p-3">
+            <div className="text-xs uppercase tracking-wide text-neutral-500">Units (30d)</div>
+            <div className={`font-display mt-1 text-2xl font-semibold [font-variant-numeric:tabular-nums] ${unitsColorClass(stats30d.unitsNet)}`}>
               {formatUnits(stats30d.unitsNet)}
             </div>
           </div>
-          <div className="rounded border border-neutral-800 bg-neutral-900 p-3">
-            <div className="text-xs text-neutral-500">Win% (30d)</div>
-            <div className="mt-1 [font-variant-numeric:tabular-nums]">{formatPct(stats30d.winPct)}</div>
+          <div className="rounded-sm border border-neutral-800 bg-neutral-900 p-3">
+            <div className="text-xs uppercase tracking-wide text-neutral-500">Win% (30d)</div>
+            <div className="font-display mt-1 text-2xl font-semibold [font-variant-numeric:tabular-nums]">{formatPct(stats30d.winPct)}</div>
           </div>
-          <div className="rounded border border-neutral-800 bg-neutral-900 p-3">
-            <div className="text-xs text-neutral-500">Streak</div>
-            <div className="mt-1 [font-variant-numeric:tabular-nums]">{formatStreak(stats30d.currentStreak)}</div>
+          <div className="rounded-sm border border-neutral-800 bg-neutral-900 p-3">
+            <div className="text-xs uppercase tracking-wide text-neutral-500">Streak</div>
+            <div className="font-display mt-1 text-2xl font-semibold [font-variant-numeric:tabular-nums]">{formatStreak(stats30d.currentStreak)}</div>
           </div>
         </div>
       )}
@@ -115,7 +125,7 @@ export default async function CapperProfilePage({
       )}
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold">Cumulative units (last 90 days)</h2>
+        <h2 className="font-display text-2xl font-bold uppercase tracking-tight">Cumulative units (last 90 days)</h2>
         <div className="mt-3 rounded border border-neutral-800 bg-neutral-900 p-3">
           <UnitsChart points={chartPoints} />
         </div>
@@ -136,7 +146,7 @@ export default async function CapperProfilePage({
       />
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold">Pick history</h2>
+        <h2 className="font-display text-2xl font-bold uppercase tracking-tight">Pick history</h2>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full text-left text-sm [font-variant-numeric:tabular-nums]">
             <thead>
@@ -189,7 +199,7 @@ export default async function CapperProfilePage({
 
       {deletionLog.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-lg font-semibold text-amber-400">Deletion log</h2>
+          <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-amber-400">Deletion log</h2>
           <p className="mt-1 text-sm text-neutral-400">
             Messages this capper deleted after posting — the record stays.
           </p>

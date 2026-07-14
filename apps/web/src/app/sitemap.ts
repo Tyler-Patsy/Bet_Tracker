@@ -13,7 +13,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .where(eq(cappers.isActive, true));
 
   return [
-    { url: `${base}/`, changeFrequency: "hourly", priority: 1 },
+    { url: `${base}/`, changeFrequency: "daily", priority: 1 },
+    { url: `${base}/leaderboard`, changeFrequency: "hourly", priority: 0.9 },
     { url: `${base}/methodology`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/about`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${base}/submit`, changeFrequency: "monthly", priority: 0.3 },
